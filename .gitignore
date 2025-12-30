@@ -1,0 +1,20 @@
+# Environment files
+# (tracked to simplify IIS deployment configuration)
+
+/calculadora-tokens-gpt/models/*
+/form-analizer-service/models/*
+/intent-miner-service/models/*
+/pii-flan-service/models/*
+
+/calculadora-tokens-gpt/venv/*
+/form-analizer-service/venv/*
+/intent-miner-service/venv/*
+/pii-flan-service/venv/*
+
+# Archivos grandes
+*.zip
+*.psd
+*.tiff
+*.mov
+*.mp4
+*.gguf
