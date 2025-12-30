@@ -1,0 +1,13 @@
+Analiza las respuestas del formulario para entender el nivel de digitalización del negocio.
+
+Ten en cuenta los siguientes aspectos:
+- Cómo describe su funcionamiento diario.
+- Qué canales de atención utiliza y si están automatizados.
+- Si responde fuera del horario laboral y cómo lo hace.
+- Si mide o rastrea sus interacciones con clientes.
+- Si ha invertido en publicidad digital y con qué resultados.
+- Cuántos clientes pierde por falta de respuesta.
+
+Con base en esta información, redacta un análisis claro, empático y profesional sobre el estado actual del negocio y su potencial de mejora usando soluciones digitales.
+
+Al final del análisis, puedes sugerir brevemente si el negocio se encuentra en una etapa: "Bajo", "Intermedio" o "Avanzado" en su transformación digital.

@@ -1,0 +1,15 @@
+{
+	"offer_services": "cuando el usuario solicita expresamente que se le muestren los servicios de la empresa, sea descripciones de los servicios en generals o listado de precios",
+	"offer_service_price": "cuando el usuario solicita expresamente el precio de un servicio, plan, suscripcion",
+	"share_contact_info": "cuando el usuario solicita los datos de contacto de la empresa, ya sea un dato de contacto individual o todos los datos de contacto de manera general",
+	"confirm_appointment": "cuando el usuario confirma los datos para cualquier tipo de cita, sea videollamada, reunión presencial o una devolución de llamada o mensaje",
+	"handle_complaint": "cuando recibes una comunicacione en tono agresivo, atiendes una queja, inconformidad o comentario negativo del cliente",
+	"callback_scheduled": "cuando recibes una solicitud del cliente para que sea contactado por personal humano, los datos para que el usuario sea contactado posteriormente",
+	"presales_init": "cuando inicia una solicitud para la compra de un producto o servicio formalmente, no confundir con pedir información o detalles de un producto o servicio",
+	"presales_complete": "cuando finaliza exitosamente una solicitud de compra de un producto o servicio",
+	"end_conversation": "cuando cierras la conversación con agradecimientos o mensajes de despedida",
+	"survey": "cuando se inicia una encuesta de cualquier tipo",
+	"survey_complete": "cuando verificas que has completado exitosamente cualquier encuesta iniciada",
+	"spam_message": "cuando la comunicacion del usuario no tiene nada que ver con el proposito de tu misión, ejemplo, el usuario quiere venderte algun producto o servicio, enviar alguna comunicacion maliciosa tipo phishing y cualquier otro escenario que detectes como sospechoso",
+	"none": "cuando no se detecta una accion significativa en la conversacion o que no está definida en las intenciones previamente definidas"
+}

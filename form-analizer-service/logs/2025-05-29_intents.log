@@ -1,0 +1,42 @@
+2025-05-29 15:23:15,938 - INFO - Use pytorch device_name: cpu
+2025-05-29 15:23:15,939 - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-05-29 15:25:24,874 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "Quiero una web para vender en línea", "intent": "none", "score": 0.4646}
+2025-05-29 15:26:17,931 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "Que productos ofrece la empresa?", "intent": "none", "score": 0.4552}
+2025-05-29 15:26:44,418 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "Quiero una web para vender en línea", "intent": "none", "score": 0.4646}
+2025-05-29 15:27:05,561 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "¿Me cuentas qué servicios brinda Bizzfront?", "intent": "offer_services", "score": 1.0}
+2025-05-29 15:27:14,131 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "qué servicios brinda Bizzfront?", "intent": "offer_services", "score": 0.936}
+2025-05-29 15:27:28,383 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "Los servicios de la empresa", "intent": "none", "score": 0.4345}
+2025-05-29 15:36:14,694 - INFO - Use pytorch device_name: cpu
+2025-05-29 15:36:14,694 - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-05-29 15:36:30,284 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "Los servicios de la empresa", "intent": "none", "score": 0.4286}
+2025-05-29 15:36:45,488 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "bizz services?", "intent": "none", "score": 0.5997}
+2025-05-29 15:36:57,229 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "Que servicios ofrecen?", "intent": "offer_services", "score": 0.7893}
+2025-05-29 15:37:22,335 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "Los servicios de la empresa por favor", "intent": "none", "score": 0.5282}
+2025-05-29 15:37:32,706 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "Los productos de la empresa por favor", "intent": "none", "score": 0.3351}
+2025-05-29 15:38:59,863 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "como funcionan los servicios de la empresa?", "intent": "none", "score": 0.6774}
+2025-05-29 15:39:09,253 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "como funcionan los servicios?", "intent": "none", "score": 0.675}
+2025-05-29 18:22:25,883 - INFO - Use pytorch device_name: cpu
+2025-05-29 18:22:25,883 - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-05-29 18:22:49,944 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "como funcionan los servicios?", "intent": "none", "score": 0.6656}
+2025-05-29 18:23:02,922 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "los servicios de la empresa plz", "intent": "none", "score": 0.6066}
+2025-05-29 18:23:08,116 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "los servicios de la empresa", "intent": "none", "score": 0.5562}
+2025-05-29 18:23:17,146 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "necesito los servicios de la empresa", "intent": "offer_services", "score": 0.8006}
+2025-05-29 18:24:48,095 - INFO - Use pytorch device_name: cpu
+2025-05-29 18:24:48,095 - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-05-29 18:33:55,203 - INFO - Use pytorch device_name: cpu
+2025-05-29 18:33:55,203 - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-05-29 18:34:00,699 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "servicios de la empresa", "intent": "offer_services", "score": 0.9878}
+2025-05-29 18:34:06,856 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "servicios empresa", "intent": "offer_services", "score": 1.0}
+2025-05-29 18:34:33,972 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "se puede agendar una cita para el servicio de diseño web?", "intent": "none", "score": 0.4826}
+2025-05-29 18:34:47,018 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "Quiero agendar una cita para el servicio de diseño web", "intent": "none", "score": 0.5903}
+2025-05-29 18:34:55,977 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "Quiero agendar una video llamada para el servicio de diseño web", "intent": "none", "score": 0.5822}
+2025-05-29 18:36:05,232 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "los datos de la empresa por favo", "intent": "none", "score": 0.4266}
+2025-05-29 18:36:13,769 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "los datos de contacto la empresa por favo", "intent": "none", "score": 0.5773}
+2025-05-29 18:36:21,168 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "email", "intent": "none", "score": 0.6463}
+2025-05-29 18:36:27,433 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "message": "email de la empresa", "intent": "none", "score": 0.6133}
+2025-05-29 21:57:46,570 - INFO - Use pytorch device_name: cpu
+2025-05-29 21:57:46,570 - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-05-29 22:03:21,695 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "context": "Usuario: Mmmm y los servicios de publicidad?\nAsistente: En Bizzfront, ofrecemos servicios especializados en Marketing Digital y Publicidad Online para ayudar a impulsar la presencia en línea de tu empresa y llegar a tu audiencia objetivo de manera efectiva. Algunos de los servicios de publicidad que ofrecemos incluyen:\n \n \U0001f3af Estrategias de Marketing Digital personalizadas.\n \U0001f4ca Publicidad en redes sociales y Google Ads.\n '\U0001f4c8 Optimización de campañas publicitarias. Publicidad móvil y remarketing. Si deseas más detalles sobre nuestros servicios de publicidad o tienes alguna pregunta específica al respecto, ¡no dudes en decírmelo! Estoy aquí para ayudarte.\nUsuario: Ok y tienes precios de este servicio de publicidad?\nAsistente: Lamentablemente, no tengo acceso directo a la información específica sobre los precios de los servicios de publicidad de Bizzfront en este momento. Te recomendaría ponerte en contacto directamente con nuestro equipo a través de nuestro correo electrónico hola@bizzfront.com o los números de teléfono proporcionados para obtener detalles precisos sobre los precios y cualquier oferta actual. ¡Estaremos encantados de brindarte toda la información que necesites! ¿Hay algo más en lo que pueda ayudarte?", "intent": "none", "score": 0.4319}
+2025-05-29 22:06:12,636 - INFO - Use pytorch device_name: cpu
+2025-05-29 22:06:12,637 - INFO - Load pretrained SentenceTransformer: distiluse-base-multilingual-cased-v1
+2025-05-29 22:06:24,531 - INFO - {"ip": "127.0.0.1", "vertical": "bizzfront", "context": "Usuario: Mmmm y los servicios de publicidad?\nAsistente: En Bizzfront, ofrecemos servicios especializados en Marketing Digital y Publicidad Online para ayudar a impulsar la presencia en línea de tu empresa y llegar a tu audiencia objetivo de manera efectiva. Algunos de los servicios de publicidad que ofrecemos incluyen:\n \n \U0001f3af Estrategias de Marketing Digital personalizadas.\n \U0001f4ca Publicidad en redes sociales y Google Ads.\n '\U0001f4c8 Optimización de campañas publicitarias. Publicidad móvil y remarketing. Si deseas más detalles sobre nuestros servicios de publicidad o tienes alguna pregunta específica al respecto, ¡no dudes en decírmelo! Estoy aquí para ayudarte.\nUsuario: Ok y tienes precios de este servicio de publicidad?\nAsistente: Lamentablemente, no tengo acceso directo a la información específica sobre los precios de los servicios de publicidad de Bizzfront en este momento. Te recomendaría ponerte en contacto directamente con nuestro equipo a través de nuestro correo electrónico hola@bizzfront.com o los números de teléfono proporcionados para obtener detalles precisos sobre los precios y cualquier oferta actual. ¡Estaremos encantados de brindarte toda la información que necesites! ¿Hay algo más en lo que pueda ayudarte?", "intent": "none", "score": 0.459}
