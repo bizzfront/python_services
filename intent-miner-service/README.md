@@ -27,7 +27,9 @@ uv run python train_index.py --vertical bizzfront
 - Ya no es necesario crear un `venv` manualmente con `python -m venv`.
 - `uv` administra el entorno virtual y el lockfile automáticamente.
 
-## Despliegue en Linux AlmaLinux
+## Despliegue en Linux AlmaLinux (ruta fija: `/var/www/services/intent-miner-service`)
+
+> Este instructivo asume que el código del servicio ya está en: `/var/www/services/intent-miner-service`.
 
 ### 1) Instalar dependencias del sistema
 
@@ -36,44 +38,73 @@ sudo dnf update -y
 sudo dnf install -y curl git
 ```
 
-### 2) Instalar `uv`
+### 2) Verificar Python y luego instalar `uv`
 
 ```bash
+python3 --version
 curl -LsSf https://astral.sh/uv/install.sh | sh
 source "$HOME/.local/bin/env"
 uv --version
 ```
 
-> Si `uv` no queda disponible en nuevas sesiones, agrega `export PATH="$HOME/.local/bin:$PATH"` a tu `~/.bashrc`.
-
-### 3) Descargar el proyecto y sincronizar dependencias
+Si `uv` no aparece en una sesión nueva, agrega esta línea en `~/.bashrc` y vuelve a cargar el shell:
 
 ```bash
-git clone <URL_DEL_REPOSITORIO>
-cd python_services/intent-miner-service
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### 3) Entrar al directorio real del servicio y sincronizar dependencias
+
+```bash
+cd /var/www/services/intent-miner-service
 uv sync --frozen
 ```
 
-### 4) Probar ejecución manual
+> `uv sync --frozen` usa el lockfile existente y falla si hay desajustes, lo que ayuda a mantener un despliegue reproducible.
+
+### 4) Validar arranque manual del servicio
 
 ```bash
+cd /var/www/services/intent-miner-service
 uv run uvicorn main:app --host 0.0.0.0 --port 4002
 ```
 
-### 5) Crear servicio `systemd`
+En otra terminal, validar que responde:
+
+```bash
+curl -i http://127.0.0.1:4002/
+```
+
+### 5) Crear usuario de ejecución (recomendado)
+
+```bash
+sudo useradd --system --create-home --shell /sbin/nologin intentminer
+```
+
+Dar permisos de lectura/ejecución sobre la ruta del proyecto:
+
+```bash
+sudo chown -R intentminer:intentminer /var/www/services/intent-miner-service
+```
+
+### 6) Crear servicio `systemd`
 
 Crear el archivo `/etc/systemd/system/intent-miner.service`:
 
 ```ini
 [Unit]
 Description=Intent Miner Service (FastAPI + uv)
-After=network.target
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
-User=<USUARIO_LINUX>
-WorkingDirectory=/ruta/a/python_services/intent-miner-service
-ExecStart=/home/<USUARIO_LINUX>/.local/bin/uv run uvicorn main:app --host 0.0.0.0 --port 4002
+User=intentminer
+Group=intentminer
+WorkingDirectory=/var/www/services/intent-miner-service
+Environment=PATH=/home/intentminer/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/home/intentminer/.local/bin/uv run uvicorn main:app --host 0.0.0.0 --port 4002
 Restart=always
 RestartSec=5
 
@@ -81,18 +112,34 @@ RestartSec=5
 WantedBy=multi-user.target
 ```
 
-Aplicar y arrancar el servicio:
+Recargar, habilitar e iniciar:
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable intent-miner.service
-sudo systemctl start intent-miner.service
+sudo systemctl enable --now intent-miner.service
 sudo systemctl status intent-miner.service
 ```
 
-### 6) (Opcional) Abrir puerto en firewall
+Ver logs en tiempo real:
+
+```bash
+sudo journalctl -u intent-miner.service -f
+```
+
+### 7) (Opcional) Abrir puerto en `firewalld`
 
 ```bash
 sudo firewall-cmd --permanent --add-port=4002/tcp
 sudo firewall-cmd --reload
+sudo firewall-cmd --list-ports
+```
+
+### 8) Actualizar a una nueva versión del servicio
+
+```bash
+cd /var/www/services/intent-miner-service
+git pull
+uv sync --frozen
+sudo systemctl restart intent-miner.service
+sudo systemctl status intent-miner.service
 ```
