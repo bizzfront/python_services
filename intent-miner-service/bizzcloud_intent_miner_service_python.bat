@@ -2,8 +2,9 @@
 REM — Cambia a la carpeta de tu proyecto
 cd /d C:\intent-miner-service
 
-REM — Activa el entorno virtual
-call venv\Scripts\activate
+REM — Sincroniza dependencias con uv (crea/actualiza .venv automáticamente)
+uv sync
+if errorlevel 1 exit /b %errorlevel%
 
-REM — Ejecuta uvicorn
-uvicorn intent_classifier_local:app --host 0.0.0.0 --port 4002
+REM — Ejecuta uvicorn con uv
+uv run uvicorn main:app --host 0.0.0.0 --port 4002
