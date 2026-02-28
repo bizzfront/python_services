@@ -103,13 +103,24 @@ Type=simple
 User=intentminer
 Group=intentminer
 WorkingDirectory=/var/www/services/intent-miner-service
-Environment=PATH=/home/intentminer/.local/bin:/usr/local/bin:/usr/bin:/bin
-ExecStart=/home/intentminer/.local/bin/uv run uvicorn main:app --host 0.0.0.0 --port 4002
+Environment=HOME=/home/intentminer
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/var/www/services/intent-miner-service/.venv/bin/uvicorn main:app --host 127.0.0.1 --port 4002
 Restart=always
 RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
+```
+
+> **Por qué así:** en `systemd` es más estable ejecutar el binario ya instalado en `.venv` (en lugar de invocar `uv run` en cada arranque). Esto evita fallos típicos por `PATH`/`HOME` y permisos de caché.
+
+Antes de iniciar el servicio, asegúrate de crear el entorno como el mismo usuario del servicio:
+
+```bash
+cd /var/www/services/intent-miner-service
+sudo -u intentminer uv sync --frozen
+ls -l .venv/bin/uvicorn
 ```
 
 Recargar, habilitar e iniciar:
@@ -124,6 +135,14 @@ Ver logs en tiempo real:
 
 ```bash
 sudo journalctl -u intent-miner.service -f
+```
+
+Si no arranca, revisar diagnóstico rápido:
+
+```bash
+sudo systemctl cat intent-miner.service
+sudo -u intentminer /var/www/services/intent-miner-service/.venv/bin/python -V
+sudo -u intentminer /var/www/services/intent-miner-service/.venv/bin/uvicorn main:app --host 127.0.0.1 --port 4002
 ```
 
 ### 7) (Opcional) Abrir puerto en `firewalld`
