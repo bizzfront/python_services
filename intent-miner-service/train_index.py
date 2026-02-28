@@ -23,10 +23,17 @@ if not os.path.exists(data_path):
     raise Exception(f"No existe archivo de intents para: {vertical}")
 
 with open(data_path, "r", encoding="utf-8") as f:
-    intent_examples = json.load(f)
+    raw_data = json.load(f)
+
+# Compatibilidad hacia atrás con formato legacy
+intent_examples = raw_data.get("intents", raw_data)
 
 vector_index = {}
 for intent, examples in intent_examples.items():
+    if not isinstance(examples, list):
+        raise ValueError(
+            f"El intent '{intent}' debe contener una lista de ejemplos para entrenar el índice"
+        )
     vectors = model.encode(examples)
     vector_index[intent] = vectors
 
@@ -35,5 +42,3 @@ with open(output_path, "wb") as f:
     pickle.dump(vector_index, f)
 
 print(f"Índice generado para '{vertical}' en {output_path}")
-
-

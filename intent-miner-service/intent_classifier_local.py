@@ -44,20 +44,27 @@ class IntentRequest(BaseModel):
 # ----------------------------
 # Prompt builders
 # ----------------------------
-def load_vertical_definitions(vertical_name: str) -> dict:
+def load_vertical_config(vertical_name: str) -> dict:
     path = os.path.join(VERTICALS_DIR, f"{vertical_name}.json")
     if not os.path.exists(path):
         #print('respuesta del modelo', f"Vertical '{path}'")
         #print('respuesta del modelo', f"Vertical '{vertical_name}' no encontrada en {VERTICALS_DIR}")
         raise FileNotFoundError(f"Vertical '{vertical_name}' no encontrada en {VERTICALS_DIR}")
     with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
+        data = json.load(f)
 
-def build_intent_block(vertical_dict: dict) -> str:
-    return "\n".join([f"- {k}: {v}" for k, v in vertical_dict.items()])
+    # Compatibilidad hacia atrás con formato legado
+    if "intents" not in data:
+        return {"intents": data, "actions": []}
 
-def build_prompt(messages: List[Message], vertical_definitions: dict) -> str:
-    intent_definitions = build_intent_block(vertical_definitions)
+    data.setdefault("actions", [])
+    return data
+
+def build_intent_block(intents_dict: dict) -> str:
+    return "\n".join([f"- {k}: {v}" for k, v in intents_dict.items()])
+
+def build_prompt(messages: List[Message], vertical_config: dict) -> str:
+    intent_definitions = build_intent_block(vertical_config["intents"])
 
     sorted_msgs = sorted(messages, key=lambda m: m.timestamp)[-4:]
     conversation = "\n".join([
@@ -108,8 +115,8 @@ def extract_clean_intent(raw_text: str) -> str:
 @app.post("/detect-intent")
 def detect_intent(request: IntentRequest):
     try:
-        vertical_definitions = load_vertical_definitions(request.vertical)
-        prompt = build_prompt(request.messages, vertical_definitions)
+        vertical_config = load_vertical_config(request.vertical)
+        prompt = build_prompt(request.messages, vertical_config)
 
         response = llm(
             prompt,
