@@ -15,8 +15,9 @@ VERTICALS_DIR = "verticals"
 def load_local_model():
     return Llama(
         model_path=MODEL_PATH,
-        n_ctx=32768,          # 🟢 importante: explícitamente forzamos 32k
-        n_threads=4,   # ajusta según tu CPU
+        #n_ctx=32768,          # 🟢 importante: explícitamente forzamos 32k
+        n_ctx=9000,
+        n_threads=2,   # ajusta según tu CPU
         n_batch=64,
         use_mlock=True
     )
@@ -46,6 +47,8 @@ class IntentRequest(BaseModel):
 def load_vertical_definitions(vertical_name: str) -> dict:
     path = os.path.join(VERTICALS_DIR, f"{vertical_name}.json")
     if not os.path.exists(path):
+        #print('respuesta del modelo', f"Vertical '{path}'")
+        #print('respuesta del modelo', f"Vertical '{vertical_name}' no encontrada en {VERTICALS_DIR}")
         raise FileNotFoundError(f"Vertical '{vertical_name}' no encontrada en {VERTICALS_DIR}")
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
