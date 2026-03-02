@@ -1,0 +1,23 @@
+{
+  "meds_check_availability": "cuando el usuario solicita verificar si un medicamento está disponible, mencionando el nombre, presentación o preguntando si hay existencia del mismo",
+  "meds_request": "cuando el usuario solicita formalmente registrar una solicitud de medicamento para retiro, apartarlo o dejar datos para ser contactado por disponibilidad",
+  "meds_requirements": "cuando el usuario pregunta qué necesita para retirar o solicitar un medicamento, incluyendo requisitos, pasos o condiciones de entrega sin solicitar disponibilidad específica",
+  "appt_request": "cuando el usuario solicita agendar una cita médica o consulta y manifiesta intención de coordinar atención",
+  "appt_confirm_details": "cuando el usuario confirma o completa los datos necesarios para agendar una cita médica como nombre, teléfono, tipo de consulta o fecha deseada",
+  "appt_reschedule": "cuando el usuario solicita cambiar o reprogramar una cita previamente solicitada o confirmada",
+  "appt_cancel": "cuando el usuario solicita cancelar una cita previamente solicitada o confirmada",
+  "hiv_schedule_info": "cuando el usuario solicita información sobre horarios, días, sedes o modalidad de atención para pruebas de VIH",
+  "hiv_request": "cuando el usuario solicita coordinar o realizarse una prueba de VIH dejando datos para programación",
+  "hiv_requirements": "cuando el usuario pregunta requisitos, preparación o condiciones para realizarse una prueba de VIH",
+  "lab_test_info": "cuando el usuario pregunta si realizan o saben donde se realiza un examen de laboratorio específico o solicita detalles sobre un examen en particular",
+  "lab_schedule_info": "cuando el usuario solicita información sobre horarios o sedes del laboratorio sin mencionar un examen específico o si quiere visitar/ir al laboratorio clinico",
+  "lab_requirements": "cuando el usuario pregunta requisitos o preparación necesaria para un examen de laboratorio como ayuno u orden médica",
+  "priority_request": "cuando el usuario solicita prioridad para la entrega o gestión de un medicamento o manifiesta urgencia asociada a un medicamento",
+  "priority_confirm_details": "cuando el usuario confirma los datos necesarios para tramitar una solicitud de prioridad como nombre, contacto y motivo breve",
+  "share_contact_info": "cuando el usuario solicita los datos de contacto de la fundación como teléfonos, dirección, correo electrónico, horarios o ubicación de sedes",
+  "callback_scheduled": "cuando el usuario solicita ser contactado por personal humano o deja sus datos para recibir una llamada o seguimiento posterior",
+  "handle_complaint": "cuando el usuario expresa una queja, inconformidad, tono agresivo o comentario negativo respecto al servicio recibido",
+  "end_conversation": "cuando el usuario cierra la conversación con agradecimientos, despedidas o indica que ya no necesita más ayuda",
+  "spam_message": "cuando la comunicación del usuario no tiene relación con el propósito del asistente, contiene contenido sospechoso, malicioso o irrelevante",
+  "none": "cuando no se detecta una acción significativa en la conversación o el mensaje no encaja en ninguna de las intenciones previamente definidas"
+}
