@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import List, Literal
+from typing import Any, List, Literal
 from llama_cpp import Llama
 import os
 import json
@@ -40,6 +40,12 @@ class Message(BaseModel):
 class IntentRequest(BaseModel):
     messages: List[Message]
     vertical: str
+
+
+class SlotExtractRequest(BaseModel):
+    messages: List[Message]
+    vertical: str
+    intent: str
 
 # ----------------------------
 # Prompt builders
@@ -91,6 +97,40 @@ Responde SOLO con el nombre del intent. Sin comillas, sin etiquetas, sin explica
     print('Prompt con instrucciones y contexto', prompt)
     return prompt.strip()
 
+
+def build_slot_prompt(messages: List[Message], action: dict) -> str:
+    sorted_msgs = sorted(messages, key=lambda m: m.timestamp)[-6:]
+    conversation = "\n".join([
+        f"{'Usuario' if m.role == 'user' else 'Asistente'}: {m.content.strip()}"
+        for m in sorted_msgs
+    ])
+    slot_schema = {
+        "intent": action.get("intent"),
+        "slots": action.get("slots", [])
+    }
+    return f"""### Sistema:
+Eres un extractor de slots para un flujo conversacional.
+
+Tu tarea es devolver EXCLUSIVAMENTE un JSON válido con los valores de los slots solicitados.
+Si no existe evidencia suficiente para un slot, usa null.
+
+Schema de extracción:
+{json.dumps(slot_schema, ensure_ascii=False, indent=2)}
+
+Devuelve este formato exacto:
+{{
+  "slots": {{
+    "slot_name": "valor o null"
+  }}
+}}
+
+No agregues explicaciones, markdown, ni texto adicional.
+
+### Conversación:
+{conversation}
+
+### JSON:""".strip()
+
 def extract_clean_intent(raw_text: str) -> str:
     """
     Limpia la salida del modelo y extrae solo el intent.
@@ -108,6 +148,65 @@ def extract_clean_intent(raw_text: str) -> str:
 
     # 3. Texto plano, elimina saltos, comillas, tags sueltos
     return raw_text.strip().strip("\"'").replace("\n", "")
+
+
+def extract_first_json_object(raw_text: str) -> dict:
+    match = re.search(r"\{.*\}", raw_text, re.DOTALL)
+    if not match:
+        raise ValueError("No se encontró un JSON válido en la respuesta del modelo")
+    return json.loads(match.group(0))
+
+
+def resolve_templates(obj: Any, slots: dict) -> Any:
+    if isinstance(obj, dict):
+        resolved = {}
+        for key, value in obj.items():
+            if isinstance(value, str):
+                placeholders = re.findall(r"\{([^{}]+)\}", value)
+                if placeholders and any(slots.get(p) in (None, "") for p in placeholders):
+                    continue
+            resolved[key] = resolve_templates(value, slots)
+        return resolved
+
+    if isinstance(obj, list):
+        return [resolve_templates(value, slots) for value in obj]
+
+    if isinstance(obj, str):
+        placeholders = re.findall(r"\{([^{}]+)\}", obj)
+        value = obj
+        for placeholder_name in placeholders:
+            placeholder = "{" + placeholder_name + "}"
+            replacement = slots.get(placeholder_name)
+            value = value.replace(placeholder, "" if replacement is None else str(replacement))
+        return value
+
+    return obj
+
+
+def build_action_execution(action_config: dict, slots: dict) -> dict:
+    http_cfg = action_config.get("http", {})
+    base_url = http_cfg.get("base_url", "").rstrip("/")
+    endpoint = http_cfg.get("endpoint", "")
+    url = f"{base_url}{endpoint}"
+
+    action_payload = {
+        "method": http_cfg.get("method", "GET"),
+        "url": url,
+    }
+
+    query = resolve_templates(http_cfg.get("query_params", {}), slots)
+    if query:
+        action_payload["query"] = query
+
+    body = resolve_templates(http_cfg.get("body", {}), slots)
+    if body:
+        action_payload["body"] = body
+
+    headers = resolve_templates(http_cfg.get("headers", {}), slots)
+    if headers:
+        action_payload["headers"] = headers
+
+    return action_payload
     
 # ----------------------------
 # Endpoint principal
@@ -140,3 +239,59 @@ def detect_intent(request: IntentRequest):
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Respuesta inválida del modelo: {str(e)}")
+
+
+@app.post("/extract-slots")
+def extract_slots(request: SlotExtractRequest):
+    try:
+        vertical_config = load_vertical_config(request.vertical)
+        action = next((a for a in vertical_config.get("actions", []) if a.get("intent") == request.intent), None)
+        if not action:
+            raise HTTPException(
+                status_code=404,
+                detail=f"No existe acción configurada para intent '{request.intent}' en vertical '{request.vertical}'"
+            )
+
+        prompt = build_slot_prompt(request.messages, action)
+        response = llm(
+            prompt,
+            max_tokens=256,
+            stop=[],
+            temperature=0.0,
+            top_k=1,
+            top_p=0.9
+        )
+        output_text = response["choices"][0]["text"].strip()
+        parsed_json = extract_first_json_object(output_text)
+
+        slot_definitions = action.get("slots", [])
+        extracted_slots = parsed_json.get("slots", {}) if isinstance(parsed_json, dict) else {}
+
+        slots = {
+            slot["name"]: extracted_slots.get(slot["name"])
+            for slot in slot_definitions
+        }
+
+        missing = [
+            slot["name"]
+            for slot in slot_definitions
+            if slot.get("required") and slots.get(slot["name"]) in (None, "")
+        ]
+
+        action_execution = None
+        if not missing:
+            action_execution = build_action_execution(action, slots)
+
+        return {
+            "intent": request.intent,
+            "slots": slots,
+            "missing": missing,
+            "action": action_execution,
+        }
+
+    except HTTPException:
+        raise
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error extrayendo slots: {str(e)}")
