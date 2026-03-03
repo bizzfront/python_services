@@ -18,7 +18,7 @@ def load_local_model():
     return Llama(
         model_path=MODEL_PATH,
         #n_ctx=32768,          # 🟢 importante: explícitamente forzamos 32k
-        n_ctx=8000,
+        n_ctx=9000,
         n_threads=2,   # ajusta según tu CPU
         n_batch=64,
         use_mlock=True
