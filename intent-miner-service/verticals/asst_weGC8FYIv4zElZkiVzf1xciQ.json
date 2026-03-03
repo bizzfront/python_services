@@ -78,7 +78,7 @@
       "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas médicas por especialidad. Si hay filas con cupos mayores a 0 o estado disponible, resume opciones de cita con especialidad, médico, sede, fecha y hora. Si no hay cupos o el estado está cerrado/reservado, responde que no hay disponibilidad de citas para esa especialidad en este momento."
     },
     {
-      "key": "aappt_check_availability_by_doctor",
+      "key": "appt_check_availability_by_doctor",
       "intent": "appt_check_availability_by_doctor",
       "slots": [
         {
@@ -102,6 +102,32 @@
       },
       "result_interpreter_attributes": "body.rows['Médico','Especialidad','Sede','Fecha','Hora','Cupos Disponibles','Estado (Disponible/Reservado/Cerrado)']",
       "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas médicas por especialidad. Si hay filas con cupos mayores a 0 o estado disponible, resume opciones de cita con especialidad, médico, sede, fecha y hora. Si no hay cupos o el estado está cerrado/reservado, responde que no hay disponibilidad de citas para esa especialidad en este momento."
+    },
+    {
+      "key": "hiv_schedule_info",
+      "intent": "hiv_schedule_info",
+      "slots": [
+        {
+          "name": "vih",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "http": {
+        "method": "GET",
+        "base_url": "http://127.0.0.1:4005",
+        "endpoint": "/v1/fundase",
+        "headers": {
+          "x-api-key": "2s1zd4fs456df56s4d56f4s56d4f56s4d6"
+        },
+        "query_params": {
+          "module": "vih",
+          "col": "Día|Hora Inicio",
+          "like": "{medico}"
+        }
+      },
+      "result_interpreter_attributes": "body.rows['Sede','Día','Hora Inicio','Hora Fin','Requiere Cita (Sí/No)','Requisitos']",
+      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas para tratamiento del VIH SIDA. Si hay filas con cupos mayores a 0 o estado disponible, resume opciones de cita, sede, fecha y hora. Si no hay cupos o el estado está cerrado/reservado, responde que no hay disponibilidad de citas para esta especialidad en este momento."
     }
   ]
 }
