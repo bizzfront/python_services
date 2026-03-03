@@ -47,7 +47,7 @@
         }
       },
       "result_interpreter_attributes": "body.rows['Medicamento','Presentación','Sede','Disponible (Sí/No)']",
-      "action_message_prompt": "Si la consulta es sobre medicamentos, indica disponibilidad real según el campo 'Disponible (Sí/No)'. Si no hay disponibilidad o no hay filas, responde explícitamente que no hay disponibilidad del medicamento solicitado. Si sí hay disponibilidad, menciona medicamento, presentación y sede cuando existan."
+      "action_message_prompt": "Esta es una consulta sobre medicamentos, indica disponibilidad real según el campo 'Disponible (Sí/No)'. Si no hay disponibilidad o no hay filas, responde explícitamente que no hay disponibilidad del medicamento solicitado. Si sí hay disponibilidad, menciona medicamento, presentación y sede cuando existan."
     },
     {
       "key": "appt_check_availability_by_speciality",
@@ -73,7 +73,7 @@
         }
       },
       "result_interpreter_attributes": "body.rows['ID Cita','Médico','Especialidad','Sede','Fecha','Hora','Cupos Disponibles','Estado (Disponible/Reservado/Cerrado)']",
-      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas por especialidad, nunca de medicamentos. Si hay filas con cupos mayores a 0 o estado disponible, resume opciones de cita con especialidad, médico, sede, fecha y hora. Si no hay cupos o el estado está cerrado/reservado, responde que no hay disponibilidad de citas para esa especialidad en este momento."
+      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas médicas por especialidad, nunca de medicamentos. Si hay filas con cupos mayores a 0 o estado disponible, resume opciones de cita con especialidad, médico, sede, fecha y hora. Si no hay cupos o el estado está cerrado/reservado, responde que no hay disponibilidad de citas para esa especialidad en este momento."
     }
   ]
 }
