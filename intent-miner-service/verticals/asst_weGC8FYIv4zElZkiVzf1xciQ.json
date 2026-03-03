@@ -6,7 +6,7 @@
     "appt_check_availability_by_speciality":"cuando el usuario solicita expresamente disponibilidad para una cita/consulta/triaje médica por especialidad",
     "appt_check_availability_by_doctor": "cuando el usuario solicita expresamente disponibilidad para una cita/consulta/triaje médica ubicando a un doctor en especifico",
     "appt_request": "cuando el usuario solicita agendar una cita médica o consulta y manifiesta intención de coordinar atención",
-    "appt_confirm_details": "cuando el usuario confirma o completa los datos necesarios para agendar una cita médica como nombre, teléfono, tipo de consulta o fecha deseada",
+    "appt_confirm_details": "cuando el usuario confirma o completa los datos necesarios para agendar una cita médica como nombre, teléfono y especialidad. Si ya indicó la especialidad, debes confirmarla",
     "appt_reschedule": "cuando el usuario solicita cambiar o reprogramar una cita previamente solicitada o confirmada",
     "appt_cancel": "cuando el usuario solicita cancelar una cita previamente solicitada o confirmada",
     "hiv_schedule_info": "cuando el usuario solicita información sobre horarios, días, sedes o modalidad de atención para pruebas de VIH",
@@ -53,7 +53,7 @@
     },
     {
       "key": "appt_check_availability_by_speciality",
-      "intent": "appt_request",
+      "intent": "appt_check_availability_by_speciality",
       "slots": [
         {
           "name": "especialidad",
@@ -74,8 +74,34 @@
           "like": "{especialidad}"
         }
       },
-      "result_interpreter_attributes": "body.rows['ID Cita','Médico','Especialidad','Sede','Fecha','Hora','Cupos Disponibles','Estado (Disponible/Reservado/Cerrado)']",
-      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas médicas por especialidad, nunca de medicamentos. Si hay filas con cupos mayores a 0 o estado disponible, resume opciones de cita con especialidad, médico, sede, fecha y hora. Si no hay cupos o el estado está cerrado/reservado, responde que no hay disponibilidad de citas para esa especialidad en este momento."
+      "result_interpreter_attributes": "body.rows['Médico','Especialidad','Sede','Fecha','Hora','Cupos Disponibles','Estado (Disponible/Reservado/Cerrado)']",
+      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas médicas por especialidad. Si hay filas con cupos mayores a 0 o estado disponible, resume opciones de cita con especialidad, médico, sede, fecha y hora. Si no hay cupos o el estado está cerrado/reservado, responde que no hay disponibilidad de citas para esa especialidad en este momento."
+    },
+    {
+      "key": "aappt_check_availability_by_doctor",
+      "intent": "appt_check_availability_by_doctor",
+      "slots": [
+        {
+          "name": "medico",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "http": {
+        "method": "GET",
+        "base_url": "http://127.0.0.1:4005",
+        "endpoint": "/v1/fundase",
+        "headers": {
+          "x-api-key": "2s1zd4fs456df56s4d56f4s56d4f56s4d6"
+        },
+        "query_params": {
+          "module": "agenda",
+          "col": "Médico",
+          "like": "{medico}"
+        }
+      },
+      "result_interpreter_attributes": "body.rows['Médico','Especialidad','Sede','Fecha','Hora','Cupos Disponibles','Estado (Disponible/Reservado/Cerrado)']",
+      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas médicas por especialidad. Si hay filas con cupos mayores a 0 o estado disponible, resume opciones de cita con especialidad, médico, sede, fecha y hora. Si no hay cupos o el estado está cerrado/reservado, responde que no hay disponibilidad de citas para esa especialidad en este momento."
     }
   ]
 }
