@@ -350,9 +350,7 @@ Respuesta HTTP completa:
             return generated
 
     if not rows:
-        if "especialidad" in str(action.get("key", "")).lower():
-            return "No hay disponibilidad de citas para la especialidad solicitada en este momento."
-        return "No hay disponibilidad del medicamento solicitado en este momento"
+        return "No se encontraron resultados para tu solicitud en este momento."
 
     available_row = None
     for row in rows:
@@ -362,19 +360,9 @@ Respuesta HTTP completa:
             break
 
     if not available_row:
-        if "especialidad" in str(action.get("key", "")).lower():
-            return "No hay disponibilidad de citas para la especialidad solicitada en este momento."
-        return "No hay disponibilidad del medicamento solicitado en este momento"
+        return "No se encontraron resultados disponibles para tu solicitud en este momento."
 
-    presentacion = available_row.get("Presentación")
-    sede = available_row.get("Sede")
-    medicamento = available_row.get("Medicamento") or slots.get("medicamento")
-
-    if presentacion and sede:
-        return f"Tenemos disponible el medicamento {medicamento} de {presentacion} en la sede {sede}."
-    if presentacion:
-        return f"Tenemos disponible el medicamento {medicamento} en presentación {presentacion}."
-    return f"Tenemos disponible el medicamento {medicamento}."
+    return "Se encontraron resultados disponibles para tu solicitud."
     
 # ----------------------------
 # Endpoint principal
