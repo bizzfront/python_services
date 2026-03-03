@@ -345,7 +345,7 @@ Respuesta HTTP completa:
             top_k=1,
             top_p=0.9,
         )
-        generated = response["choices"][0]["text"].strip().strip('"').strip("'")
+        generated = clean_action_message(response["choices"][0]["text"])
         if generated:
             return generated
 
@@ -363,6 +363,40 @@ Respuesta HTTP completa:
         return "No se encontraron resultados disponibles para tu solicitud en este momento."
 
     return "Se encontraron resultados disponibles para tu solicitud."
+
+
+def clean_action_message(raw_text: Any) -> str:
+    if raw_text is None:
+        return ""
+
+    text = str(raw_text).strip()
+    if not text:
+        return ""
+
+    # Si el modelo responde JSON, intenta recuperar campos esperados.
+    try:
+        parsed = json.loads(text)
+        if isinstance(parsed, dict):
+            for key in ("action_message", "message", "respuesta"):
+                value = parsed.get(key)
+                if isinstance(value, str) and value.strip():
+                    text = value
+                    break
+    except Exception:
+        pass
+
+    text = text.replace("\\n", " ").replace("\n", " ").strip()
+    text = re.sub(r"^\s*(?:###\s*)?(?:mensaje|action_message|respuesta)\s*:\s*", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"`{3}.*", "", text, flags=re.DOTALL)
+    text = re.split(r"(?i)\bstatus\s*code\b|###\s|\[/?INST\]|\[/?RESPUESTA\]", text, maxsplit=1)[0]
+
+    # Quédate con la primera oración para evitar fugas de prompt/contexto.
+    sentence_match = re.search(r"^(.+?[.!?])(?:\s|$)", text)
+    if sentence_match:
+        text = sentence_match.group(1)
+
+    text = re.sub(r"\s+", " ", text).strip().strip('"').strip("'")
+    return text
     
 # ----------------------------
 # Endpoint principal
