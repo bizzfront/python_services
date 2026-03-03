@@ -70,7 +70,7 @@
         },
         "query_params": {
           "module": "agenda",
-          "col": "Especialidad",
+          "col": "Médico|Especialidad",
           "like": "{especialidad}"
         }
       },
@@ -96,7 +96,7 @@
         },
         "query_params": {
           "module": "agenda",
-          "col": "Médico",
+          "col": "Médico|Especialidad",
           "like": "{medico}"
         }
       },
