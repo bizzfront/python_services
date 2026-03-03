@@ -419,6 +419,10 @@ def extract_slots(request: SlotExtractRequest):
                 status_code=404,
                 detail=f"No existe acción configurada para intent '{request.intent}' en vertical '{request.vertical}'"
             )
+        
+        print(f"request vertical:", request.vertical)
+        print(f"request intent:", request.intent)
+        print(f"request messages:", request.messages)
 
         prompt = build_slot_prompt(request.messages, action)
         response = llm(

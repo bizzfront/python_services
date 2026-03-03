@@ -3,6 +3,8 @@
     "meds_check_availability": "cuando el usuario solicita verificar si un medicamento está disponible, mencionando el nombre, presentación o preguntando si hay existencia del mismo",
     "meds_request": "cuando el usuario solicita formalmente registrar una solicitud de medicamento para retiro, apartarlo o dejar datos para ser contactado por disponibilidad",
     "meds_requirements": "cuando el usuario pregunta qué necesita para retirar o solicitar un medicamento, incluyendo requisitos, pasos o condiciones de entrega sin solicitar disponibilidad específica",
+    "appt_check_availability_by_speciality":"cuando el usuario solicita expresamente disponibilidad para una cita/consulta/triaje médica por especialidad",
+    "appt_check_availability_by_doctor": "cuando el usuario solicita expresamente disponibilidad para una cita/consulta/triaje médica ubicando a un doctor en especifico",
     "appt_request": "cuando el usuario solicita agendar una cita médica o consulta y manifiesta intención de coordinar atención",
     "appt_confirm_details": "cuando el usuario confirma o completa los datos necesarios para agendar una cita médica como nombre, teléfono, tipo de consulta o fecha deseada",
     "appt_reschedule": "cuando el usuario solicita cambiar o reprogramar una cita previamente solicitada o confirmada",
