@@ -45,7 +45,8 @@
           "col": "Medicamento",
           "like": "{medicamento}"
         }
-      }
+      },
+      "result_interpreter_attributes": "body.rows['Medicamento','Presentación','Sede','Disponible (Sí/No)']"
     }
   ]
 }

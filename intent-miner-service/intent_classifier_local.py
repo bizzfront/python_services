@@ -271,6 +271,69 @@ def execute_action_http(action_payload: dict, timeout_seconds: int = 15) -> dict
         }
     except URLError as e:
         raise HTTPException(status_code=502, detail=f"No se pudo ejecutar action HTTP: {str(e)}")
+
+
+def extract_result_interpreter_rows(action_response: dict, interpreter_expression: str) -> list[dict]:
+    if not interpreter_expression or not isinstance(action_response, dict):
+        return []
+
+    match = re.match(r"^([a-zA-Z0-9_.]+)\[(.*)\]$", interpreter_expression.strip())
+    if not match:
+        return []
+
+    base_path = match.group(1)
+    raw_columns = match.group(2)
+    columns = re.findall(r"'([^']+)'|\"([^\"]+)\"", raw_columns)
+    column_names = [single or double for single, double in columns]
+
+    current: Any = action_response
+    for key in base_path.split("."):
+        if not isinstance(current, dict):
+            return []
+        current = current.get(key)
+
+    if not isinstance(current, list):
+        return []
+
+    if not column_names:
+        return [row for row in current if isinstance(row, dict)]
+
+    filtered_rows = []
+    for row in current:
+        if not isinstance(row, dict):
+            continue
+        filtered_rows.append({col: row.get(col) for col in column_names})
+    return filtered_rows
+
+
+def build_action_message(action: dict, slots: dict, action_response: dict) -> str | None:
+    interpreter_expression = action.get("result_interpreter_attributes")
+    if not interpreter_expression:
+        return None
+
+    rows = extract_result_interpreter_rows(action_response, interpreter_expression)
+    if not rows:
+        return "No hay disponibilidad del medicamento solicitado en este momento"
+
+    available_row = None
+    for row in rows:
+        available_value = str(row.get("Disponible (Sí/No)", "")).strip().lower()
+        if available_value in {"sí", "si", "yes", "true", "1"}:
+            available_row = row
+            break
+
+    if not available_row:
+        return "No hay disponibilidad del medicamento solicitado en este momento"
+
+    presentacion = available_row.get("Presentación")
+    sede = available_row.get("Sede")
+    medicamento = available_row.get("Medicamento") or slots.get("medicamento")
+
+    if presentacion and sede:
+        return f"Tenemos disponible el medicamento {medicamento} de {presentacion} en la sede {sede}."
+    if presentacion:
+        return f"Tenemos disponible el medicamento {medicamento} en presentación {presentacion}."
+    return f"Tenemos disponible el medicamento {medicamento}."
     
 # ----------------------------
 # Endpoint principal
@@ -344,10 +407,12 @@ def extract_slots(request: SlotExtractRequest):
 
         action_execution = None
         action_response = None
+        action_message = None
         if not missing:
             action_execution = build_action_execution(action, slots)
             if request.execute_action:
                 action_response = execute_action_http(action_execution, timeout_seconds=request.timeout_seconds)
+                action_message = build_action_message(action, slots, action_response)
 
         return {
             "intent": request.intent,
@@ -355,6 +420,7 @@ def extract_slots(request: SlotExtractRequest):
             "missing": missing,
             "action": action_execution,
             "action_response": action_response,
+            "action_message": action_message,
         }
 
     except HTTPException:
