@@ -108,7 +108,7 @@
       "intent": "hiv_schedule_info",
       "slots": [
         {
-          "name": "vih",
+          "name": "sede",
           "type": "string",
           "required": true
         }
@@ -122,12 +122,64 @@
         },
         "query_params": {
           "module": "vih",
-          "col": "Día|Hora Inicio",
-          "like": "{medico}"
+          "col": "Sede",
+          "like": "{sede}"
         }
       },
       "result_interpreter_attributes": "body.rows['Sede','Día','Hora Inicio','Hora Fin','Requiere Cita (Sí/No)','Requisitos']",
-      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas para tratamiento del VIH SIDA. Si hay filas con cupos mayores a 0 o estado disponible, resume opciones de cita, sede, fecha y hora. Si no hay cupos o el estado está cerrado/reservado, responde que no hay disponibilidad de citas para esta especialidad en este momento."
+      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas para examenes de VIH SIDA unicamente. Si el o los registros existen, resume los datos Sede, Día, Hora Inicio, Requiere Cita y Requisitos. Si no hay datos, responde que no hay disponibilidad en este momento."
+    },
+    {
+      "key": "lab_test_info",
+      "intent": "lab_test_info",
+      "slots": [
+        {
+          "name": "examen",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "http": {
+        "method": "GET",
+        "base_url": "http://127.0.0.1:4005",
+        "endpoint": "/v1/fundase",
+        "headers": {
+          "x-api-key": "2s1zd4fs456df56s4d56f4s56d4f56s4d6"
+        },
+        "query_params": {
+          "module": "laboratorio",
+          "col": "Nombre Examen",
+          "like": "{examen}"
+        }
+      },
+      "result_interpreter_attributes": "body.rows['Nombre Examen','Sede','Requiere Ayuno (Sí/No)','Requiere Orden Médica (Sí/No)','Días Disponibles','Horario','Observaciones']",
+      "action_message_prompt": "Esta acción es SOLO para disponibilidad examenes de laboratorio. Si el o los registros existen, resume los datos Nombre Examen, Sede, Requiere Ayuno, Requiere Orden Médica, Días Disponibles, Horario, y Observaciones. Si no hay datos, responde que no hay disponibilidad en este momento."
+    },
+    {
+      "key": "lab_schedule_info",
+      "intent": "lab_schedule_info",
+      "slots": [
+        {
+          "name": "dia",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "http": {
+        "method": "GET",
+        "base_url": "http://127.0.0.1:4005",
+        "endpoint": "/v1/fundase",
+        "headers": {
+          "x-api-key": "2s1zd4fs456df56s4d56f4s56d4f56s4d6"
+        },
+        "query_params": {
+          "module": "laboratorio",
+          "col": "Días Disponibles",
+          "like": "{dia}"
+        }
+      },
+      "result_interpreter_attributes": "body.rows['Nombre Examen','Sede','Requiere Ayuno (Sí/No)','Requiere Orden Médica (Sí/No)','Días Disponibles','Horario','Observaciones']",
+      "action_message_prompt": "Esta acción es SOLO para disponibilidad de dias/horarios de atencion para examenes de laboratorios y sedes disponibles. Si el o los registros existen, resume los datos Nombre Examen, Sede, Requiere Ayuno, Requiere Orden Médica, Días Disponibles, Horario, y Observaciones. Si no hay datos, responde que no hay disponibilidad en este momento."
     }
   ]
 }
