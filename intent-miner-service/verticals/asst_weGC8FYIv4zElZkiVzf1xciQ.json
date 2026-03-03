@@ -35,7 +35,7 @@
       ],
       "http": {
         "method": "GET",
-        "base_url": "http://localhost:4005",
+        "base_url": "http://127.0.0.1:4005",
         "endpoint": "/v1/fundase",
         "headers": {
           "x-api-key": "2s1zd4fs456df56s4d56f4s56d4f56s4d6"
