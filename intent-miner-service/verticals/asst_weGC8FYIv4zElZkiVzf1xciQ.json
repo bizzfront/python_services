@@ -46,7 +46,34 @@
           "like": "{medicamento}"
         }
       },
-      "result_interpreter_attributes": "body.rows['Medicamento','Presentación','Sede','Disponible (Sí/No)']"
+      "result_interpreter_attributes": "body.rows['Medicamento','Presentación','Sede','Disponible (Sí/No)']",
+      "action_message_prompt": "Si la consulta es sobre medicamentos, indica disponibilidad real según el campo 'Disponible (Sí/No)'. Si no hay disponibilidad o no hay filas, responde explícitamente que no hay disponibilidad del medicamento solicitado. Si sí hay disponibilidad, menciona medicamento, presentación y sede cuando existan."
+    },
+    {
+      "key": "appt_check_availability_by_speciality",
+      "intent": "appt_request",
+      "slots": [
+        {
+          "name": "especialidad",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "http": {
+        "method": "GET",
+        "base_url": "http://127.0.0.1:4005",
+        "endpoint": "/v1/fundase",
+        "headers": {
+          "x-api-key": "2s1zd4fs456df56s4d56f4s56d4f56s4d6"
+        },
+        "query_params": {
+          "module": "agenda",
+          "col": "Especialidad",
+          "like": "{especialidad}"
+        }
+      },
+      "result_interpreter_attributes": "body.rows['ID Cita','Médico','Especialidad','Sede','Fecha','Hora','Cupos Disponibles','Estado (Disponible/Reservado/Cerrado)']",
+      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas por especialidad, nunca de medicamentos. Si hay filas con cupos mayores a 0 o estado disponible, resume opciones de cita con especialidad, médico, sede, fecha y hora. Si no hay cupos o el estado está cerrado/reservado, responde que no hay disponibilidad de citas para esa especialidad en este momento."
     }
   ]
 }

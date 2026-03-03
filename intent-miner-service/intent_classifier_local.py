@@ -312,7 +312,46 @@ def build_action_message(action: dict, slots: dict, action_response: dict) -> st
         return None
 
     rows = extract_result_interpreter_rows(action_response, interpreter_expression)
+    custom_prompt = action.get("action_message_prompt")
+    if custom_prompt:
+        slots_json = json.dumps(slots, ensure_ascii=False)
+        rows_json = json.dumps(rows[:8], ensure_ascii=False, indent=2)
+        response_json = json.dumps(action_response, ensure_ascii=False, indent=2)
+        message_prompt = f"""### Sistema:
+Eres un redactor de mensajes para acciones de un asistente.
+
+Responde SOLO una oración breve en español, sin markdown ni JSON.
+El mensaje debe estar estrictamente alineado al tipo de acción y a los resultados obtenidos.
+
+Instrucción específica de la acción:
+{custom_prompt}
+
+Action key: {action.get('key')}
+Action intent: {action.get('intent')}
+Slots extraídos: {slots_json}
+
+Filas interpretadas:
+{rows_json}
+
+Respuesta HTTP completa:
+{response_json}
+
+### Mensaje:"""
+        response = llm(
+            message_prompt,
+            max_tokens=120,
+            stop=[],
+            temperature=0.0,
+            top_k=1,
+            top_p=0.9,
+        )
+        generated = response["choices"][0]["text"].strip().strip('"').strip("'")
+        if generated:
+            return generated
+
     if not rows:
+        if "especialidad" in str(action.get("key", "")).lower():
+            return "No hay disponibilidad de citas para la especialidad solicitada en este momento."
         return "No hay disponibilidad del medicamento solicitado en este momento"
 
     available_row = None
@@ -323,6 +362,8 @@ def build_action_message(action: dict, slots: dict, action_response: dict) -> st
             break
 
     if not available_row:
+        if "especialidad" in str(action.get("key", "")).lower():
+            return "No hay disponibilidad de citas para la especialidad solicitada en este momento."
         return "No hay disponibilidad del medicamento solicitado en este momento"
 
     presentacion = available_row.get("Presentación")
