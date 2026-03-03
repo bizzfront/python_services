@@ -5,6 +5,8 @@ from llama_cpp import Llama
 import os
 import json
 import re
+from urllib import parse, request as urllib_request
+from urllib.error import HTTPError, URLError
 
 # ----------------------------
 # Configuración del modelo GGUF
@@ -46,6 +48,8 @@ class SlotExtractRequest(BaseModel):
     messages: List[Message]
     vertical: str
     intent: str
+    execute_action: bool = True
+    timeout_seconds: int = 15
 
 # ----------------------------
 # Prompt builders
@@ -207,6 +211,66 @@ def build_action_execution(action_config: dict, slots: dict) -> dict:
         action_payload["headers"] = headers
 
     return action_payload
+
+
+def execute_action_http(action_payload: dict, timeout_seconds: int = 15) -> dict:
+    method = str(action_payload.get("method", "GET")).upper()
+    url = action_payload.get("url")
+    query = action_payload.get("query", {})
+    headers = action_payload.get("headers", {})
+    body = action_payload.get("body")
+
+    if not url:
+        raise ValueError("La acción no contiene URL válida")
+
+    if query:
+        encoded_query = parse.urlencode(query, doseq=True)
+        separator = "&" if "?" in url else "?"
+        url = f"{url}{separator}{encoded_query}"
+
+    request_data = None
+    request_headers = dict(headers) if isinstance(headers, dict) else {}
+
+    if body is not None:
+        request_data = json.dumps(body).encode("utf-8")
+        request_headers.setdefault("Content-Type", "application/json")
+
+    req = urllib_request.Request(
+        url=url,
+        data=request_data,
+        headers=request_headers,
+        method=method,
+    )
+
+    try:
+        with urllib_request.urlopen(req, timeout=timeout_seconds) as resp:
+            response_raw = resp.read().decode("utf-8", errors="replace")
+            response_content_type = resp.headers.get("Content-Type", "")
+            try:
+                response_body = json.loads(response_raw)
+            except Exception:
+                response_body = response_raw
+
+            return {
+                "status_code": resp.status,
+                "url": url,
+                "content_type": response_content_type,
+                "body": response_body,
+            }
+    except HTTPError as e:
+        error_raw = e.read().decode("utf-8", errors="replace") if hasattr(e, "read") else str(e)
+        try:
+            error_body = json.loads(error_raw)
+        except Exception:
+            error_body = error_raw
+        return {
+            "status_code": e.code,
+            "url": url,
+            "error": True,
+            "body": error_body,
+        }
+    except URLError as e:
+        raise HTTPException(status_code=502, detail=f"No se pudo ejecutar action HTTP: {str(e)}")
     
 # ----------------------------
 # Endpoint principal
@@ -279,14 +343,18 @@ def extract_slots(request: SlotExtractRequest):
         ]
 
         action_execution = None
+        action_response = None
         if not missing:
             action_execution = build_action_execution(action, slots)
+            if request.execute_action:
+                action_response = execute_action_http(action_execution, timeout_seconds=request.timeout_seconds)
 
         return {
             "intent": request.intent,
             "slots": slots,
             "missing": missing,
             "action": action_execution,
+            "action_response": action_response,
         }
 
     except HTTPException:
