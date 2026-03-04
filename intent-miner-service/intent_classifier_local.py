@@ -311,6 +311,8 @@ def build_action_message(action: dict, slots: dict, action_response: dict) -> st
     if not interpreter_expression:
         return None
 
+    fallback_message = action.get("fallback_message_default")
+
     rows = extract_result_interpreter_rows(action_response, interpreter_expression)
     custom_prompt = action.get("action_message_prompt")
     if custom_prompt:
@@ -350,7 +352,7 @@ Respuesta HTTP completa:
             return generated
 
     if not rows:
-        return "No se encontraron resultados para tu solicitud en este momento."
+        return fallback_message or "No se encontraron resultados para tu solicitud en este momento."
 
     available_row = None
     for row in rows:
@@ -360,7 +362,7 @@ Respuesta HTTP completa:
             break
 
     if not available_row:
-        return "No se encontraron resultados disponibles para tu solicitud en este momento."
+        return fallback_message or "No se encontraron resultados disponibles para tu solicitud en este momento."
 
     return "Se encontraron resultados disponibles para tu solicitud."
 
@@ -433,6 +435,7 @@ def detect_intent(request: IntentRequest):
 
 @app.post("/extract-slots")
 def extract_slots(request: SlotExtractRequest):
+    action = None
     try:
         vertical_config = load_vertical_config(request.vertical)
         action = next((a for a in vertical_config.get("actions", []) if a.get("intent") == request.intent), None)
@@ -495,4 +498,14 @@ def extract_slots(request: SlotExtractRequest):
     except FileNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
+        if isinstance(action, dict) and action.get("fallback_message_default"):
+            return {
+                "intent": request.intent,
+                "slots": {},
+                "missing": [],
+                "action": None,
+                "action_response": None,
+                "action_message": action.get("fallback_message_default"),
+                "error": str(e),
+            }
         raise HTTPException(status_code=500, detail=f"Error extrayendo slots: {str(e)}")
