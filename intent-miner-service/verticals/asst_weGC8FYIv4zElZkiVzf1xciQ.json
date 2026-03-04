@@ -185,7 +185,7 @@
         }
       },
       "result_interpreter_attributes": "body.rows['Nombre Examen','Sede','Requiere Ayuno (Sí/No)','Requiere Orden Médica (Sí/No)','Días Disponibles','Horario','Observaciones']",
-      "action_message_prompt": "Esta acción es SOLO para disponibilidad examenes de laboratorio. Si el o los registros existen, resume las opciones de examen con Nombre, Sede, Requiere Ayuno, Requiere Orden Médica, Días Disponibles, Horario, y Observaciones. Si no hay datos, responde que no hay disponibilidad en este momento.",
+      "action_message_prompt": "Esta acción es SOLO para disponibilidad examenes de laboratorio. Si el o los registros existen, resume las opciones de examen disponibles en formato amigable con Nombre, Sede, Requiere Ayuno, Requiere Orden Médica, Días Disponibles, Horario, y Observaciones. Si no hay datos, responde que no hay disponibilidad en este momento.",
       "fallback_message_default": "No se ha encontrado información del examen de laboratorio consultado."
     },
     {
@@ -213,7 +213,7 @@
         }
       },
       "result_interpreter_attributes": "body.rows['Nombre Examen','Sede','Requiere Ayuno (Sí/No)','Requiere Orden Médica (Sí/No)','Días Disponibles','Horario','Observaciones']",
-      "action_message_prompt": "Esta acción es SOLO para disponibilidad de dias/horarios de atencion para examenes de laboratorios y sedes disponibles. Si el o los registros existen, resume las opciones de examen con Nombre, Sede, Requiere Ayuno, Requiere Orden Médica, Días Disponibles, Horario, y Observaciones. Si no hay datos, responde que no hay disponibilidad en este momento.",
+      "action_message_prompt": "Esta acción es SOLO para disponibilidad de dias/horarios de atencion para examenes de laboratorios y sedes disponibles. Si el o los registros existen, resume las opciones de examen disponibles en formato amigable con Nombre, Sede, Requiere Ayuno, Requiere Orden Médica, Días Disponibles, Horario, y Observaciones. Si no hay datos, responde que no hay disponibilidad en este momento.",
       "fallback_message_default": "No se ha encontrado disponibilidad de horarios de laboratorio para el día consultado."
     }
   ]
