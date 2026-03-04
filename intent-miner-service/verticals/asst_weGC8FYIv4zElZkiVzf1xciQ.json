@@ -48,7 +48,7 @@
           "like": "{medicamento}"
         }
       },
-      "result_interpreter_attributes": "body.rows['Principio Activo','Medicamento,'Marca Producto','Cantidad']",
+      "result_interpreter_attributes": "body.rows['Principio Activo','Medicamento','Marca Producto','Cantidad']",
       "action_message_prompt": "Esta es una consulta sobre medicamentos, indica disponibilidad real según el campo 'Cantidad' si este es mayor a 0, indicando de manera detallada el o los medicamentos disponibles indicando principio activo, nombre y marca del medicamento. Si no hay disponibilidad o no hay registros, responde explícitamente que no hay disponibilidad del medicamento solicitado. Si sí hay disponibilidad, menciona medicamento, su principio activo y marca.",
       "fallback_message_default": "No se ha encontrado disponibilidad del medicamento consultado."
     },
@@ -181,7 +181,7 @@
           "module": "laboratorio",
           "col": "*",
           "like": "{examen}",
-          "termsMode":"any"
+          "termsMode": "any"
         }
       },
       "result_interpreter_attributes": "body.rows['Nombre Examen','Sede','Requiere Ayuno (Sí/No)','Requiere Orden Médica (Sí/No)','Días Disponibles','Horario','Observaciones']",
@@ -209,7 +209,7 @@
           "module": "laboratorio",
           "col": "Días Disponibles",
           "like": "{dia}",
-          "termsMode":"any"
+          "termsMode": "any"
         }
       },
       "result_interpreter_attributes": "body.rows['Nombre Examen','Sede','Requiere Ayuno (Sí/No)','Requiere Orden Médica (Sí/No)','Días Disponibles','Horario','Observaciones']",
