@@ -3,7 +3,7 @@
     "medications_check_availability": "cuando el usuario solicita verificar si un medicamento está disponible, mencionando el nombre, presentación o preguntando si hay existencia del mismo",
     "medications_request": "cuando el usuario solicita formalmente registrar una solicitud de medicamento para retiro, apartarlo o dejar datos para ser contactado por disponibilidad",
     "medications_requirements": "cuando el usuario pregunta qué necesita para retirar o solicitar un medicamento, incluyendo requisitos, pasos o condiciones de entrega sin solicitar disponibilidad específica",
-    "medical_appointment_check_availability_by_speciality":"cuando el usuario solicita expresamente disponibilidad para una cita/consulta/triaje médica por especialidad",
+    "medical_appointment_check_availability_by_speciality": "cuando el usuario solicita expresamente disponibilidad para una cita/consulta/triaje médica por especialidad",
     "medical_appointment_check_availability_by_doctor": "cuando el usuario solicita expresamente disponibilidad para una cita/consulta/triaje médica ubicando a un doctor en especifico",
     "medical_appointment_request": "cuando el usuario solicita agendar una cita médica o consulta y manifiesta intención de coordinar atención",
     "medical_appointment_confirm_details": "cuando el usuario confirma o completa los datos necesarios para agendar una cita médica como nombre, teléfono y especialidad. Si ya indicó la especialidad, debes confirmarla",
@@ -49,7 +49,8 @@
         }
       },
       "result_interpreter_attributes": "body.rows['Medicamento','Presentación','Sede','Disponible (Sí/No)']",
-      "action_message_prompt": "Esta es una consulta sobre medicamentos, indica disponibilidad real según el campo 'Disponible (Sí/No)'. Si no hay disponibilidad o no hay filas, responde explícitamente que no hay disponibilidad del medicamento solicitado. Si sí hay disponibilidad, menciona medicamento, presentación y sede cuando existan."
+      "action_message_prompt": "Esta es una consulta sobre medicamentos, indica disponibilidad real según el campo 'Disponible (Sí/No)'. Si no hay disponibilidad o no hay filas, responde explícitamente que no hay disponibilidad del medicamento solicitado. Si sí hay disponibilidad, menciona medicamento, presentación y sede cuando existan.",
+      "fallback_message_default": "No se ha encontrado disponibilidad del medicamento consultado."
     },
     {
       "key": "medical_appointment_check_availability_by_speciality",
@@ -75,7 +76,8 @@
         }
       },
       "result_interpreter_attributes": "body.rows['Médico','Especialidad','Sede','Fecha','Hora','Cupos Disponibles','Estado (Disponible/Reservado/Cerrado)']",
-      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas médicas por especialidad. Si hay filas con cupos mayores a 0 o estado disponible, resume opciones de cita con especialidad, médico, sede, fecha y hora. Si no hay cupos o el estado está cerrado/reservado, responde que no hay disponibilidad de citas para esa especialidad en este momento."
+      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas médicas por especialidad. Si hay filas con cupos mayores a 0 o estado disponible, resume opciones de cita con especialidad, médico, sede, fecha y hora. Si no hay cupos o el estado está cerrado/reservado, responde que no hay disponibilidad de citas para esa especialidad en este momento.",
+      "fallback_message_default": "No se ha encontrado disponibilidad para la especialidad consultada."
     },
     {
       "key": "medical_appointment_request",
@@ -101,7 +103,8 @@
         }
       },
       "result_interpreter_attributes": "body.rows['Médico','Especialidad','Sede','Fecha','Hora','Cupos Disponibles','Estado (Disponible/Reservado/Cerrado)']",
-      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas médicas por especialidad. Si hay filas con cupos mayores a 0 o estado disponible, resume opciones de cita con especialidad, médico, sede, fecha y hora. Si no hay cupos o el estado está cerrado/reservado, responde que no hay disponibilidad de citas para esa especialidad en este momento."
+      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas médicas por especialidad. Si hay filas con cupos mayores a 0 o estado disponible, resume opciones de cita con especialidad, médico, sede, fecha y hora. Si no hay cupos o el estado está cerrado/reservado, responde que no hay disponibilidad de citas para esa especialidad en este momento.",
+      "fallback_message_default": "No se ha encontrado disponibilidad para la especialidad consultada."
     },
     {
       "key": "medical_appointment_check_availability_by_doctor",
@@ -127,7 +130,8 @@
         }
       },
       "result_interpreter_attributes": "body.rows['Médico','Especialidad','Sede','Fecha','Hora','Cupos Disponibles','Estado (Disponible/Reservado/Cerrado)']",
-      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas médicas por especialidad. Si hay filas con cupos mayores a 0 o estado disponible, resume opciones de cita con especialidad, médico, sede, fecha y hora. Si no hay cupos o el estado está cerrado/reservado, responde que no hay disponibilidad de citas para esa especialidad en este momento."
+      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas médicas por especialidad. Si hay filas con cupos mayores a 0 o estado disponible, resume opciones de cita con especialidad, médico, sede, fecha y hora. Si no hay cupos o el estado está cerrado/reservado, responde que no hay disponibilidad de citas para esa especialidad en este momento.",
+      "fallback_message_default": "No se ha encontrado disponibilidad del doctor consultado."
     },
     {
       "key": "hiv_schedule_info",
@@ -153,7 +157,8 @@
         }
       },
       "result_interpreter_attributes": "body.rows['Sede','Día','Hora Inicio','Hora Fin','Requiere Cita (Sí/No)','Requisitos']",
-      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas para examenes de VIH SIDA unicamente. Si el o los registros existen, resume los datos Sede, Día, Hora Inicio, Requiere Cita y Requisitos. Si no hay datos, responde que no hay disponibilidad en este momento."
+      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas para examenes de VIH SIDA unicamente. Si el o los registros existen, resume los datos Sede, Día, Hora Inicio, Requiere Cita y Requisitos. Si no hay datos, responde que no hay disponibilidad en este momento.",
+      "fallback_message_default": "No se ha encontrado disponibilidad para pruebas de VIH en la sede consultada."
     },
     {
       "key": "lab_test_info",
@@ -179,7 +184,8 @@
         }
       },
       "result_interpreter_attributes": "body.rows['Nombre Examen','Sede','Requiere Ayuno (Sí/No)','Requiere Orden Médica (Sí/No)','Días Disponibles','Horario','Observaciones']",
-      "action_message_prompt": "Esta acción es SOLO para disponibilidad examenes de laboratorio. Si el o los registros existen, resume los datos Nombre Examen, Sede, Requiere Ayuno, Requiere Orden Médica, Días Disponibles, Horario, y Observaciones. Si no hay datos, responde que no hay disponibilidad en este momento."
+      "action_message_prompt": "Esta acción es SOLO para disponibilidad examenes de laboratorio. Si el o los registros existen, resume los datos Nombre Examen, Sede, Requiere Ayuno, Requiere Orden Médica, Días Disponibles, Horario, y Observaciones. Si no hay datos, responde que no hay disponibilidad en este momento.",
+      "fallback_message_default": "No se ha encontrado información del examen de laboratorio consultado."
     },
     {
       "key": "lab_schedule_info",
@@ -205,7 +211,8 @@
         }
       },
       "result_interpreter_attributes": "body.rows['Nombre Examen','Sede','Requiere Ayuno (Sí/No)','Requiere Orden Médica (Sí/No)','Días Disponibles','Horario','Observaciones']",
-      "action_message_prompt": "Esta acción es SOLO para disponibilidad de dias/horarios de atencion para examenes de laboratorios y sedes disponibles. Si el o los registros existen, resume los datos Nombre Examen, Sede, Requiere Ayuno, Requiere Orden Médica, Días Disponibles, Horario, y Observaciones. Si no hay datos, responde que no hay disponibilidad en este momento."
+      "action_message_prompt": "Esta acción es SOLO para disponibilidad de dias/horarios de atencion para examenes de laboratorios y sedes disponibles. Si el o los registros existen, resume los datos Nombre Examen, Sede, Requiere Ayuno, Requiere Orden Médica, Días Disponibles, Horario, y Observaciones. Si no hay datos, responde que no hay disponibilidad en este momento.",
+      "fallback_message_default": "No se ha encontrado disponibilidad de horarios de laboratorio para el día consultado."
     }
   ]
 }
