@@ -315,6 +315,10 @@ def build_action_message(action: dict, slots: dict, action_response: dict) -> st
 
     rows = extract_result_interpreter_rows(action_response, interpreter_expression)
     has_available_rows = rows_indicate_availability(rows)
+
+    if action.get("intent") == "medications_check_availability":
+        return build_medications_availability_message(rows, fallback_message)
+
     custom_prompt = action.get("action_message_prompt")
     if custom_prompt:
         slots_json = json.dumps(slots, ensure_ascii=False)
@@ -361,6 +365,54 @@ Respuesta HTTP completa:
         return fallback_message or "No se encontraron resultados disponibles para tu solicitud en este momento."
 
     return summarize_rows_message(rows)
+
+
+def parse_quantity(value: Any) -> int | None:
+    if value in (None, "", "null"):
+        return None
+
+    text_value = str(value).strip().replace(",", ".")
+    try:
+        return int(float(text_value))
+    except ValueError:
+        return None
+
+
+def build_medications_availability_message(rows: list[dict], fallback_message: str | None) -> str:
+    if not rows:
+        return fallback_message or "No se ha encontrado disponibilidad del medicamento consultado."
+
+    available_rows: list[dict] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+
+        qty = parse_quantity(row.get("Cantidad"))
+        if qty is not None and qty > 0:
+            available_rows.append(row)
+
+    if not available_rows:
+        return fallback_message or "No se ha encontrado disponibilidad del medicamento consultado."
+
+    details: list[str] = []
+    for row in available_rows[:10]:
+        med_name = str(row.get("Medicamento") or "").strip()
+        active = str(row.get("Principio Activo") or "").strip()
+        brand = str(row.get("Marca Producto") or "").strip()
+        qty = parse_quantity(row.get("Cantidad"))
+
+        parts = [med_name or "Medicamento sin nombre"]
+        if active:
+            parts.append(f"principio activo: {active}")
+        if brand:
+            parts.append(f"marca: {brand}")
+        if qty is not None:
+            parts.append(f"cantidad: {qty}")
+
+        details.append(" (" + ", ".join(parts[1:]) + ")" if len(parts) > 1 else "")
+        details[-1] = f"{parts[0]}{details[-1]}"
+
+    return "Sí hay disponibilidad. Medicamentos encontrados: " + "; ".join(details) + "."
 
 
 def rows_indicate_availability(rows: list[dict]) -> bool:
