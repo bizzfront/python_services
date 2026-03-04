@@ -314,6 +314,7 @@ def build_action_message(action: dict, slots: dict, action_response: dict) -> st
     fallback_message = action.get("fallback_message_default")
 
     rows = extract_result_interpreter_rows(action_response, interpreter_expression)
+    has_available_rows = rows_indicate_availability(rows)
     custom_prompt = action.get("action_message_prompt")
     if custom_prompt:
         slots_json = json.dumps(slots, ensure_ascii=False)
@@ -349,22 +350,91 @@ Respuesta HTTP completa:
         )
         generated = clean_action_message(response["choices"][0]["text"])
         if generated:
+            if has_available_rows and message_says_no_availability(generated):
+                return summarize_rows_message(rows)
             return generated
 
     if not rows:
         return fallback_message or "No se encontraron resultados para tu solicitud en este momento."
 
-    available_row = None
-    for row in rows:
-        available_value = str(row.get("Disponible (Sí/No)", "")).strip().lower()
-        if available_value in {"sí", "si", "yes", "true", "1"}:
-            available_row = row
-            break
-
-    if not available_row:
+    if not has_available_rows:
         return fallback_message or "No se encontraron resultados disponibles para tu solicitud en este momento."
 
-    return "Se encontraron resultados disponibles para tu solicitud."
+    return summarize_rows_message(rows)
+
+
+def rows_indicate_availability(rows: list[dict]) -> bool:
+    if not rows:
+        return False
+
+    explicit_signal_seen = False
+
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+
+        available_value = str(row.get("Disponible (Sí/No)", "")).strip().lower()
+        if available_value:
+            explicit_signal_seen = True
+            if available_value in {"sí", "si", "yes", "true", "1", "disponible"}:
+                return True
+
+        cupos_value = row.get("Cupos Disponibles")
+        if cupos_value not in (None, ""):
+            explicit_signal_seen = True
+            cupos_text = str(cupos_value).strip()
+            if cupos_text.isdigit() and int(cupos_text) > 0:
+                return True
+
+        status_value = str(row.get("Estado (Disponible/Reservado/Cerrado)", "")).strip().lower()
+        if status_value:
+            explicit_signal_seen = True
+            if "disponible" in status_value and not any(term in status_value for term in ("no disponible", "cerrado", "reservado")):
+                return True
+
+    # Si no existen columnas explícitas de disponibilidad,
+    # la presencia de filas se interpreta como información encontrada.
+    return not explicit_signal_seen
+
+
+def summarize_rows_message(rows: list[dict], max_rows: int = 2, max_fields: int = 6) -> str:
+    summaries: list[str] = []
+
+    for row in rows[:max_rows]:
+        if not isinstance(row, dict):
+            continue
+        parts: list[str] = []
+        for key, value in row.items():
+            if value in (None, "", "null"):
+                continue
+            parts.append(f"{key}: {value}")
+            if len(parts) >= max_fields:
+                break
+
+        if parts:
+            summaries.append("; ".join(parts))
+
+    if not summaries:
+        return "Se encontraron resultados para tu solicitud."
+
+    return "Encontré esta información: " + " | ".join(summaries) + "."
+
+
+def message_says_no_availability(message: str) -> bool:
+    normalized = str(message or "").strip().lower()
+    if not normalized:
+        return False
+
+    no_availability_signals = (
+        "no hay disponibilidad",
+        "sin disponibilidad",
+        "no se ha encontrado disponibilidad",
+        "no encontramos disponibilidad",
+        "no hay cupos",
+        "no hay citas disponibles",
+        "no hay resultados",
+    )
+    return any(signal in normalized for signal in no_availability_signals)
 
 
 def clean_action_message(raw_text: Any) -> str:
