@@ -76,7 +76,7 @@
         }
       },
       "result_interpreter_attributes": "body.rows['Especialidad','Médico','Servicio','Horarios de consulta']",
-      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas médicas por especialidad. Si hay filas con cupos mayores a 0 o estado disponible, resume opciones de cita con especialidad, medico, servicio y horarios de consulta. Si no hay registros o aparece como no disponible, responde que no hay disponibilidad de citas para esa especialidad en este momento.",
+      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas médicas por especialidad. Si hay registros disponibles, resume opciones de cita con especialidad, medico, servicio y horarios de consulta. Si no hay registros o aparece como no disponible, responde que no hay disponibilidad de citas para esa especialidad en este momento.",
       "fallback_message_default": "No se ha encontrado disponibilidad para la especialidad consultada."
     },
     {
@@ -102,8 +102,8 @@
           "like": "{especialidad}"
         }
       },
-      "result_interpreter_attributes": "body.rows['Médico','Especialidad','Sede','Fecha','Hora','Cupos Disponibles','Estado (Disponible/Reservado/Cerrado)']",
-      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas médicas por especialidad. Si hay filas con cupos mayores a 0 o estado disponible, resume opciones de cita con especialidad, médico, sede, fecha y hora. Si no hay cupos o el estado está cerrado/reservado, responde que no hay disponibilidad de citas para esa especialidad en este momento.",
+      "result_interpreter_attributes": "body.rows['Especialidad','Médico','Servicio','Horarios de consulta']",
+      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas médicas por especialidad. Si hay registros disponibles, resume opciones de cita con especialidad, medico, servicio y horarios de consulta. Si no hay registros o aparece como no disponible, responde que no hay disponibilidad de citas para esa especialidad en este momento.",
       "fallback_message_default": "No se ha encontrado disponibilidad para la especialidad consultada."
     },
     {
@@ -129,8 +129,8 @@
           "like": "{medico}"
         }
       },
-      "result_interpreter_attributes": "body.rows['Médico','Especialidad','Sede','Fecha','Hora','Cupos Disponibles','Estado (Disponible/Reservado/Cerrado)']",
-      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas médicas por especialidad. Si hay filas con cupos mayores a 0 o estado disponible, resume opciones de cita con especialidad, médico, sede, fecha y hora. Si no hay cupos o el estado está cerrado/reservado, responde que no hay disponibilidad de citas para esa especialidad en este momento.",
+      "result_interpreter_attributes": "body.rows['Especialidad','Médico','Servicio','Horarios de consulta']",
+      "action_message_prompt": "Esta acción es SOLO para disponibilidad de citas médicas por especialidad. Si hay registros disponibles, resume opciones de cita con especialidad, medico, servicio y horarios de consulta. Si no hay registros o aparece como no disponible, responde que no hay disponibilidad de citas para esa especialidad en este momento.",
       "fallback_message_default": "No se ha encontrado disponibilidad del doctor consultado."
     },
     {
